@@ -7,10 +7,8 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int N;
-
     public static void main(String[] args) throws IOException {
-     //   System.setIn(new FileInputStream("src/BOJ/Section11/P10882/input.txt"));
+//        System.setIn(new FileInputStream("src/BOJ/Section11/P10882/input.txt"));
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -18,60 +16,66 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         st = new StringTokenizer(br.readLine());
         String input = st.nextToken();
-        int h = Integer.parseInt(input.substring(0, 2));
-        int m = Integer.parseInt(input.substring(3, 5));
 
+        int currentHour = Integer.parseInt(input.substring(0, 2));
+        int currentMinute = Integer.parseInt(input.substring(3, 5));
+
+        // 시간 차이를 나타내는 값을 읽기 (예: +8.5 또는 -7)
         input = st.nextToken();
-        double plus;
+        double offsetTime;
+        // 시간 차이의 부호를 구분하여 읽기
         if (input.substring(3, 4).equals("+")) {
-            plus = Double.parseDouble(input.substring(4));
+            offsetTime = Double.parseDouble(input.substring(4));
         } else {
-            plus = -1 * Double.parseDouble(input.substring(4));
+            offsetTime = -1 * Double.parseDouble(input.substring(4));
         }
 
         for (int i = 0; i < N; i++) {
             input = br.readLine();
-            int targetH = 0;
-            int targetM = 0;
+            int adjustmentHour = 0; // 시간 조정 변수
+            int adjustmentMinute = 0; // 분 조정 변수
 
+            // 입력에서 부호와 시간을 파싱하여 조정값 계산
             for (int j = 0; j < input.length(); j++) {
-                boolean isPlus;
+                boolean isPositive;
                 if (input.charAt(j) == '-' || input.charAt(j) == '+') {
-                    isPlus = (input.charAt(j) == '+') ? true : false;
+                    isPositive = (input.charAt(j) == '+');
                     String time = input.substring(j + 1);
-                    // split 할 때 '\\.'을 사용해야 정규표현식에서 '.'을 리터럴로 처리할 수 있음.
-                    String[] times = time.split("\\.");
+                    String[] timeParts = time.split("\\.");
 
-                    if (times.length == 1) {
-                        targetH = (isPlus) ? Integer.parseInt(time) : -1 * Integer.parseInt(time);
+                    // 시간만 있는 경우와 분이 포함된 경우를 구분
+                    if (timeParts.length == 1) {
+                        adjustmentHour = isPositive ? Integer.parseInt(time) : -Integer.parseInt(time);
                     } else {
-                        targetH = (isPlus) ? Integer.parseInt(times[0]) : -1 * Integer.parseInt(times[0]);
-                        targetM = (isPlus) ? 30 : -30;
+                        adjustmentHour = isPositive ? Integer.parseInt(timeParts[0]) : -Integer.parseInt(timeParts[0]);
+                        adjustmentMinute = isPositive ? 30 : -30; // 분 단위 조정
                     }
                     break;
                 }
             }
 
-            // plus 값 처리: 소수점까지 고려한 시간 계산
-            int additionalH = (int) plus;
-            int additionalM = (int) ((plus - additionalH) * 60); // 소수점 이하를 분으로 변환
+            // 시간 차이를 고려하여 추가적인 시간 및 분 계산
+            int offsetHour = (int) offsetTime; // 시간 차이의 시 부분
+            int offsetMinute = (int) ((offsetTime - offsetHour) * 60); // 시간 차이의 분 부분
 
-            // 기존 시간과 더하기
-            int h_ = h + targetH - additionalH;
-            int m_ = m + targetM - additionalM;
+            // 현재 시간에 조정값과 시간 차이를 반영하여 새로운 시간 계산
+            int newHour = currentHour + adjustmentHour - offsetHour;
+            int newMinute = currentMinute + adjustmentMinute - offsetMinute;
 
-            if (m_ >= 60) {
-                h_ += m_ / 60;
-                m_ %= 60;
-            } else if (m_ < 0) {
-                h_ -= 1 + (-m_) / 60;
-                m_ = (m_ + 60) % 60;
+            // 분이 60 이상이면 시간에 반영하고, 0 미만이면 올바르게 처리
+            if (newMinute >= 60) {
+                newHour += newMinute / 60;
+                newMinute %= 60;
+            } else if (newMinute < 0) {
+                newHour -= 1 + (-newMinute) / 60;
+                newMinute = (newMinute + 60) % 60;
             }
 
-            h_ = (h_ + 24) % 24;
+            // 시간 값을 24시간 형식으로 조정
+            newHour = (newHour + 24) % 24;
 
-            // 출력 포맷 맞추기!!!
-            System.out.printf("%02d:%02d\n", h_, m_);
+            // 결과 출력: 2자리로 포맷팅하여 시:분 형태로 출력
+            System.out.printf("%02d:%02d\n", newHour, newMinute);
         }
     }
 }
