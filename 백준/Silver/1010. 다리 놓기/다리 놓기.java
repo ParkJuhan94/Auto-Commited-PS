@@ -28,25 +28,15 @@ public class Main {
 
     private static int combination(int n, int r)
     {
-        // 이미 계산된 값일 경우
-        if (dp[n][r] > 0)
-        {
+        if(r == 0 || n == r) {
+            return 1;
+        }
+        
+        if(dp[n][r] != 0) {
             return dp[n][r];
         }
-
-        // bottom 설정
-        // 원소의 갯수가 조합의 갯수와 동일하거나 0일 경우
-        // 1로 설정하면서 dp 갱신
-        else if (n == r || r == 0)
-        {
-            return dp[n][r] = 1;
-        }
-
-        // 일반적인 경우 : 재귀로 더하면서 dp 에 갱신
-        else
-        {
-            return dp[n][r] = combination(n - 1, r - 1) + combination(n - 1, r);
-        }
+        
+        return dp[n][r] = (combination(n - 1, r) + combination(n - 1, r - 1));
     }
 
 }
