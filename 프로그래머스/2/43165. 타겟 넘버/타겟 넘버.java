@@ -1,26 +1,25 @@
 import java.util.*;
 
 class Solution {
-    int answer = 0;
+    static int answer = 0;
     
     public int solution(int[] numbers, int target) {                
                 
-        dfs(numbers, target, 0, 0, 0);
+        dfs(0, 0, 0, numbers, target);
         
         return answer;
     }
     
-    void dfs(int[] numbers, int target, int depth, int start, int sum) {
+    public void dfs(int depth, int cur, int sum, int[] numbers, int target) {
         if(depth == numbers.length) {
             if(sum == target) {
                 answer++;
             }
-            return;
+            return;                        
         }
         
-        for(int i = start; i < numbers.length; i++) {
-            dfs(numbers, target, depth + 1, i + 1, sum + numbers[start]);
-            dfs(numbers, target, depth + 1, i + 1, sum - numbers[start]);
-        }
+        dfs(depth + 1, cur + 1, sum + numbers[cur], numbers, target);
+        dfs(depth + 1, cur + 1, sum - numbers[cur], numbers, target);
     }
+
 }
