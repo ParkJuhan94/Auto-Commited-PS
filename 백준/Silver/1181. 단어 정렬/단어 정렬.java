@@ -1,33 +1,52 @@
-import java.io.*;
-import java.util.*;
+//package WEEK0.P90;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.StringTokenizer;
 
 public class Main {
+    static int N;
+    static int M;
+
     public static void main(String[] args) throws IOException {
+        //System.setIn(new FileInputStream("src/WEEK0/P90/input.txt"));
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        
-        int n = Integer.parseInt(br.readLine());
-        Set<String> words = new HashSet<>();
-        
-        // 중복 제거하며 입력받기
-        for (int i = 0; i < n; i++) {
-            words.add(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        N = Integer.parseInt(st.nextToken());
+        //M = Integer.parseInt(st.nextToken());
+        ArrayList<String>[] arr = new ArrayList[51];
+
+        for(int i = 0; i <= 50; i++){
+            arr[i] = new ArrayList<>();
         }
-        
-        // List로 변환 후 정렬
-        List<String> list = new ArrayList<>(words);
-        list.sort((a, b) -> {
-            if (a.length() != b.length()) {
-                return a.length() - b.length();  // 길이 오름차순
+
+        for(int i = 0; i < N; i++){
+            String input = br.readLine();
+
+            if(!arr[input.length()].contains(input)){
+                arr[input.length()].add(input);
             }
-            return a.compareTo(b);  // 사전순
-        });
-        
-        // 출력
-        for (String word : list) {
-            sb.append(word).append('\n');
         }
-        
-        System.out.print(sb);
+
+        for(int i = 1; i <= 50; i++){
+            Collections.sort(arr[i]);
+        }
+
+        for(int i = 1; i <= 50; i++){
+            for(int j = 0; j < arr[i].size(); j++){
+                System.out.println(arr[i].get(j));
+            }
+        }
+
+
+
+//        int ans = 0;
+//        System.out.println(ans);
     }
 }
