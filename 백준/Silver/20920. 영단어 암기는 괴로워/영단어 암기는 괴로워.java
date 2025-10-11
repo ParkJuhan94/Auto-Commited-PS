@@ -5,48 +5,56 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
+        PriorityQueue<Word> pq = new PriorityQueue<>();
+        HashMap<String, Integer> map = new HashMap<>();
         
-        // 1. 빈도수 카운팅 (길이 M 이상만)
-        HashMap<String, Integer> wordCount = new HashMap<>();
-        
-        for (int i = 0; i < N; i++) {
+        for(int i = 0; i < N; i++) {
             String word = br.readLine();
+            if(word.length() < M) continue;
             
-            if (word.length() >= M) {  // M 이상만 저장
-                wordCount.put(word, wordCount.getOrDefault(word, 0) + 1);
-            }
+            map.put(word, map.getOrDefault(word, 0) + 1);
         }
         
-        // 2. 정렬을 위해 List로 변환
-        List<String> words = new ArrayList<>(wordCount.keySet());
+        for(String word : map.keySet()) {
+            pq.add(new Word(word, map.get(word)));   
+        }                
         
-        // 3. 커스텀 정렬
-        words.sort((w1, w2) -> {
-            int count1 = wordCount.get(w1);
-            int count2 = wordCount.get(w2);
-            
-            // 1순위: 빈도수 내림차순
-            if (count1 != count2) {
-                return count2 - count1;  // 큰 값이 앞으로
-            }
-            
-            // 2순위: 길이 내림차순
-            if (w1.length() != w2.length()) {
-                return w2.length() - w1.length();
-            }
-            
-            // 3순위: 사전순 오름차순
-            return w1.compareTo(w2);
-        });
-        
-        // 4. 출력
-        StringBuilder sb = new StringBuilder();
-        for (String word : words) {
-            sb.append(word).append('\n');
+        StringBuilder sb = new StringBuilder();        
+       
+        while(!pq.isEmpty()) {
+            Word cur = pq.poll();
+            sb.append(cur.word + "\n");
         }
-        System.out.print(sb);
+        
+        System.out.println(sb.toString());
+    }
+    
+    static class Word implements Comparable<Word>{
+        String word;
+        int count;
+        int len;
+        
+        public Word(String word, int count) {
+            this.word = word;
+            this.len = word.length();
+            this.count = count;
+        }
+        
+        @Override
+        public int compareTo(Word o) {
+            if(this.count == o.count) {
+                if(this.len == o.len) {
+                    return this.word.compareTo(o.word);
+                } else {
+                    return o.len - this.len;
+                }
+            } else {
+                return o.count - this.count;
+            }
+        }
     }
 }
+
+    
