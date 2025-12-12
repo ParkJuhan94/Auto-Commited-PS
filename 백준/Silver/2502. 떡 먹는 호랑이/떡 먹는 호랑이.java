@@ -9,34 +9,32 @@ public class Main {
         int D = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
         
-        // i번째 날의 떡 개수 = weightA[i] * A + weightB[i] * B
-        int[] weightA = new int[D + 1];
-        int[] weightB = new int[D + 1];
-        
-        // 초기값: 첫째 날은 A개, 둘째 날은 B개
-        weightA[1] = 1;  weightB[1] = 0;  // 1일차: A
-        weightA[2] = 0;  weightB[2] = 1;  // 2일차: B
-        
-        // 피보나치 점화식으로 계수 계산
-        for (int i = 3; i <= D; i++) {
-            weightA[i] = weightA[i - 1] + weightA[i - 2];
-            weightB[i] = weightB[i - 1] + weightB[i - 2];
+        // 예외
+        if(D == 3) {
+            int a = K/2;
+            int b = K - a;
+                    
+            System.out.println(a);
+            System.out.println(b);
+            return;
         }
         
-        // D일차: weightA[D] * A + weightB[D] * B = K
-        // A를 1부터 시도하며 정수 B 찾기
-        for (int A = 1; A <= K; A++) {
-            int remainder = K - weightA[D] * A;
-            
-            // B가 양의 정수이고, A ≤ B를 만족하는지 확인
-            if (remainder > 0 && remainder % weightB[D] == 0) {
-                int B = remainder / weightB[D];
-                
-                if (A <= B) {
-                    System.out.println(A);
-                    System.out.println(B);
-                    return;
-                }
+        int[] dp = new int[D + 1];
+        dp[1] = 1;
+        dp[2] = 2;
+
+        for(int i = 3; i <= D; i++) {
+            dp[i] = dp[i - 1] + dp[i -2];
+        }        
+        
+        // a, b 찾기
+        for(int i = 1; i <= K/2; i++) {
+            int diff = K - i * dp[D - 3];
+            int remainder = diff % dp[D - 2];
+            if(remainder == 0 && diff/dp[D - 2] >= i) {
+                System.out.println(i);
+                System.out.println(diff/dp[D - 2]);
+                return;
             }
         }
     }
