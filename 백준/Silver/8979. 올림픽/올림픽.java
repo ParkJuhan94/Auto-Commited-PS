@@ -39,7 +39,7 @@ public class Main {
             
             // 전부 같으면 랭킹 그대로 = 하나라도 다르면 랭킹 증가
             if(prevG != cur.g || prevS != cur.s || prevC != cur.c) {                
-                rank++;
+                rank = i + 1;
                 prevG = cur.g;
                 prevS = cur.s;
                 prevC = cur.c;
