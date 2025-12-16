@@ -23,15 +23,21 @@ public class Main {
         
         Collections.sort(goverments);
         
-        int prevG = goverments.get(0).g;
-        int prevS = goverments.get(0).s;
-        int prevC = goverments.get(0).c;
+        Goverment firstGov = goverments.get(0);
+        int prevG = firstGov.g;
+        int prevS = firstGov.s;
+        int prevC = firstGov.c;
         int rank = 1;
+        
+        if(firstGov.idx == K) {
+            System.out.print(rank);
+            return;
+        }
         
         for(int i = 1; i < N; i++) {
             Goverment cur = goverments.get(i);
             
-            // 같은 등수인지 처리
+            // 전부 같으면 랭킹 그대로 = 하나라도 다르면 랭킹 증가
             if(prevG != cur.g || prevS != cur.s || prevC != cur.c) {                
                 rank++;
                 prevG = cur.g;
@@ -41,6 +47,7 @@ public class Main {
             
             if(cur.idx == K) {
                 System.out.print(rank);
+                return;
             }
         }
     }
@@ -58,8 +65,8 @@ class Goverment implements Comparable<Goverment> {
     
     @Override
     public int compareTo(Goverment o) {
-        if(this.g != o.g) return this.g - o.g;
-        if(this.s != o.s) return this.s - o.s;
-        return this.c - o.c;
+        if(this.g != o.g) return o.g - this.g;
+        if(this.s != o.s) return o.s - this.s;
+        return o.c - this.c;
     }
 }
